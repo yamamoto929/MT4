@@ -72,3 +72,54 @@ Matrix4x4 Quaternion::MakeRotateMatrix(const Quaternion& q) {
 
 	return result;
 }
+
+
+Quaternion Quaternion::DirectionToDirection(const Vector3& from, const Vector3& to) {
+
+	// fromとtoは正規化済みを前提とする
+
+	// 内積
+	float dot = from.x * to.x + from.y * to.y + from.z * to.z;
+
+	// 同じ向き
+	if (dot >= 0.999999f) {
+		return IdentityQuaternion();
+	}
+
+	// 真逆の向き
+	if (dot <= -0.999999f) {
+
+		// fromに垂直な回転軸を作成
+		Vector3 axis = {-from.y, from.x, 0.0f};
+
+		float length = std::sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+
+		// fromがZ軸に近い場合
+		if (length < 0.000001f) {
+			axis = {0.0f, -from.z, from.y};
+
+			length = std::sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+		}
+
+		axis.x /= length;
+		axis.y /= length;
+		axis.z /= length;
+
+		// 180度回転
+		return {axis.x, axis.y, axis.z, 0.0f};
+	}
+
+	// 通常の向き：外積から回転軸を計算
+	Vector3 cross = {from.y * to.z - from.z * to.y, from.z * to.x - from.x * to.z, from.x * to.y - from.y * to.x};
+
+	Quaternion result = {cross.x, cross.y, cross.z, 1.0f + dot};
+
+	return Normalize(result);
+}
+
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
+
+	Quaternion rotation = Quaternion::DirectionToDirection(from, to);
+
+	return Quaternion::MakeRotateMatrix(rotation);
+}

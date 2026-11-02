@@ -34,5 +34,11 @@ public:
 	static Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
 
 	static Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
+
+	// fromからtoへ回転させるQuaternion
+	static Quaternion DirectionToDirection(const Vector3& from, const Vector3& to);
 };
+
+// fromからtoへ回転させる行列
+Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to);
 
