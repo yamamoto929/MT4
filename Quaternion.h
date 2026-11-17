@@ -37,6 +37,9 @@ public:
 
 	// fromからtoへ回転させるQuaternion
 	static Quaternion DirectionToDirection(const Vector3& from, const Vector3& to);
+
+	// クォータニオンの内積
+	static float Dot(const Quaternion& q1, const Quaternion& q2);
 };
 
 // fromからtoへ回転させる行列

@@ -123,3 +123,6 @@ Matrix4x4 DirectionToDirection(const Vector3& from, const Vector3& to) {
 
 	return Quaternion::MakeRotateMatrix(rotation);
 }
+
+// クォータニオンの内積
+float Quaternion::Dot(const Quaternion& q1, const Quaternion& q2) { return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w; }
